@@ -18,6 +18,10 @@ fn main() {
     .define("ENABLE_TOOLS", "0")
     .define("CMAKE_INSTALL_LIBDIR", "lib");
 
+    if let Ok(path) = env::var("LIBAOM_SYS_CMAKE_PREFIX_PATH") {
+        aom.define("CMAKE_PREFIX_PATH", path);
+    }
+
     let host = env::var("HOST").expect("HOST");
     let target = env::var("TARGET").expect("TARGET");
     if host != target {
