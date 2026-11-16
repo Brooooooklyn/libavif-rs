@@ -34,6 +34,12 @@ fn main() {
         .define("ENABLE_TOOLS", "0")
         .define("CMAKE_INSTALL_LIBDIR", "lib");
 
+        // Match Rust's +crt-static; CMP0091 makes CMake honor the runtime setting.
+        if env::var("CARGO_CFG_TARGET_ENV").as_deref() == Ok("msvc") {
+            aom.define("CMAKE_POLICY_DEFAULT_CMP0091", "NEW")
+                .define("CMAKE_MSVC_RUNTIME_LIBRARY", "MultiThreaded");
+        }
+
         // One of them must be set, and that also makes it back-compat with default-features=false
         if cfg!(not(feature = "av1_decoder")) && cfg!(feature = "av1_encoder") {
             aom.define("CONFIG_AV1_DECODER", "0");
